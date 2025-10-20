@@ -1,34 +1,36 @@
 'use client'
 import { useState } from 'react'
-import { User, Code, Briefcase, Folder } from 'lucide-react'
 
 interface HotspotProps {
   position: [number, number, number]
   title: string
-  icon: string
   onClick: () => void
 }
-
-const icons = { user: User, code: Code, briefcase: Briefcase, folder: Folder }
 
 export default function Hotspot({ 
   position, 
   title, 
-  icon, 
   onClick 
 }: HotspotProps) {
   const [hovered, setHovered] = useState(false)
-  const IconComponent = icons[icon as keyof typeof icons]
 
   return (
-    <mesh 
-      position={position}
-      onPointerEnter={() => setHovered(true)} 
-      onPointerLeave={() => setHovered(false)}
+    <div
+      className={`absolute w-12 h-12 rounded-full cursor-pointer transition-all duration-200 ${
+        hovered ? 'bg-red-500 scale-110' : 'bg-gray-500 hover:bg-red-400'
+      }`}
+      style={{
+        left: `${position[0] + 50}%`,
+        top: `${position[1] + 50}%`,
+        transform: `translate(-50%, -50%) translate3d(${position[2]}px, 0, 0)`
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={onClick}
     >
-      <sphereGeometry args={[0.3, 8, 8]} />
-      <meshBasicMaterial color={hovered ? "#ef4444" : "#6b7280"} />
-    </mesh>
+      <span className="text-white text-xs flex items-center justify-center h-full">
+        {title}
+      </span>
+    </div>
   )
 }
