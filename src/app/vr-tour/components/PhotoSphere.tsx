@@ -1,29 +1,23 @@
 'use client'
-import { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { Mesh } from 'three'
+import { useState, useEffect } from 'react'
 
-interface PhotoSphereProps {
-  imageUrl: string
-  radius?: number
-}
+export default function PhotoSphere() {
+  const [rotation, setRotation] = useState(0)
 
-export default function PhotoSphere({ imageUrl, radius = 10 }: PhotoSphereProps) {
-  const meshRef = useRef<Mesh>(null)
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.1
-    }
-  })
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation((prev) => prev + 1)
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[radius, 64, 64]} />
-      <meshBasicMaterial 
-        map={imageUrl}
-        side={2}
-      />
-    </mesh>
+    <div
+      className="absolute inset-0"
+      style={{
+        background: 'radial-gradient(circle at 50% 50%, #3b82f6 0%, #1e40af 100%)',
+        transform: `rotateY(${rotation}deg)`
+      }}
+    />
   )
 }
